@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Address;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AddressFactory extends Factory
@@ -12,11 +13,11 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'country' => strtolower($this->faker->countryCode()),
-            'street' => $this->faker->streetAddress(),
-            'state' => $this->faker->state(),
-            'city' => $this->faker->city(),
-            'zip' => $this->faker->postcode(),
+            'country'    => strtolower($this->faker->countryCode()),
+            'street'     => $this->faker->streetAddress(),
+            'state'      => $this->faker->state(),
+            'city'       => $this->faker->city(),
+            'zip'        => $this->faker->postcode(),
         ];
     }
 }

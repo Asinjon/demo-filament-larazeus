@@ -1,0 +1,67 @@
+version: '3'
+services:
+    php:
+        build:
+            context: .
+            dockerfile: ./infrastructure/docker/phpfpm.Dockerfile
+        image: php-socialv
+        ports:
+            - 6001:6001
+        volumes:
+            - ./:/var/www/html:cached
+            - ./infrastructure/docker/phpfpm/.bashrc:/home/.bashrc:cached
+            - ./infrastructure/docker/phpfpm/.bashrc:/home/www-data/.bashrc:cached
+            - ./infrastructure/docker/phpfpm/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+
+    nginx:
+        build:
+            context: .
+            dockerfile: infrastructure/docker/nginx.Dockerfile
+        image: nginx-socialv
+        links:
+            - php
+        volumes:
+            - ./infrastructure/docker/nginx/conf.d:/etc/nginx/conf.d:cached
+            - ./public:/var/www/html/public:cached
+            - ./storage/app:/var/www/html/storage/app:cached
+            - ./storage/nginx-logs:/var/log/nginx:cached
+        ports:
+            - "80:80"
+        expose:
+            - 80
+
+    node:
+        build:
+            context: .
+            dockerfile: ./infrastructure/docker/node.Dockerfile
+        links:
+            - php
+            - nginx
+        image: node-socialv
+        volumes:
+            - ./:/var/www/html:cached
+        working_dir: /var/www/html
+        tty: true
+        ports:
+            - 8080:8080
+            - 5173:5173
+        expose:
+            - 8080
+            - 5173
+        environment:
+            HOST: "0.0.0.0"
+            GIT_SSL_NO_VERIFY: "true"
+
+    mysql:
+        build:
+            context: .
+            dockerfile: infrastructure/docker/mysql.Dockerfile
+        image: mysql-socialv
+        environment:
+            MYSQL_DATABASE: demo
+            MYSQL_PASSWORD: root
+            MYSQL_ROOT_PASSWORD: Admin@00
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./storage/mysql-data:/var/lib/mysql:cached

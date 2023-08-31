@@ -16,13 +16,13 @@ class BrandFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $name = $this->faker->unique()->company(),
-            'slug' => Str::slug($name),
-            'website' => 'https://www.' . $this->faker->domainName(),
+            'name'        => $name = $this->faker->unique()->company(),
+            'slug'        => Str::slug($name),
+            'website'     => 'https://www.' . $this->faker->domainName(),
             'description' => $this->faker->realText(),
-            'is_visible' => $this->faker->boolean(),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', '-6 month'),
-            'updated_at' => $this->faker->dateTimeBetween('-5 month', 'now'),
+            'is_visible'  => $this->faker->boolean(),
+            'created_at'  => $this->faker->dateTimeBetween('-1 year', '-6 month'),
+            'updated_at'  => $this->faker->dateTimeBetween('-5 month', 'now'),
         ];
     }
 }
